@@ -32,6 +32,11 @@ export const checkTask = createAsyncThunk('tasks/checkTask', async (task: ITask)
   return {...task, done: !task.done};
 });
 
+export const deleteTask = createAsyncThunk('tasks/deleteTask', async (taskId: string) => {
+  await axiosApi.delete(`tasks/${taskId}.json`);
+  return taskId;
+});
+
 export const todoListSlice = createSlice({
   name: 'todoList',
   initialState,
@@ -63,15 +68,27 @@ export const todoListSlice = createSlice({
         state.error = true;
       })
       .addCase(checkTask.pending, (state) => {
-        state.isLoading = true;
-        state.error = false;
-      })
+      state.isLoading = true;
+      state.error = false;
+    })
       .addCase(checkTask.fulfilled, (state, action) => {
         state.isLoading = false;
         state.tasks = state.tasks.map(task =>
-        task.id === action.payload.id ? action.payload : task );
+          task.id === action.payload.id ? action.payload : task );
       })
       .addCase(checkTask.rejected, (state) => {
+        state.isLoading = false;
+        state.error = true;
+      })
+      .addCase(deleteTask.pending, (state) => {
+        state.isLoading = true;
+        state.error = false;
+      })
+      .addCase(deleteTask.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.tasks = state.tasks.filter(task => task.id !== action.payload);
+      })
+      .addCase(deleteTask.rejected, (state) => {
         state.isLoading = false;
         state.error = true;
       });

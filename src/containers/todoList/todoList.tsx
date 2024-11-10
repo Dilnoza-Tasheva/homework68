@@ -1,7 +1,7 @@
 import {useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../app/store.ts';
 import { useEffect, useState } from 'react';
-import { addNewTask, checkTask, fetchList } from './todoListSlice.ts';
+import { addNewTask, checkTask, deleteTask, fetchList } from './todoListSlice.ts';
 import { ITask } from '../../types';
 
 
@@ -19,11 +19,17 @@ const TodoList = () => {
     if (newTaskTitle.trim()) {
       dispatch(addNewTask(newTaskTitle));
       setNewTaskTitle('');
+    } else {
+      alert('Please enter your task!');
     }
   };
 
   const clickOnCheck = (task: ITask) => {
     dispatch(checkTask(task));
+  };
+
+  const onDeleteTask = (taskId: string) => {
+    dispatch(deleteTask(taskId));
   };
 
   return (
@@ -37,7 +43,7 @@ const TodoList = () => {
             value={newTaskTitle}
             onChange={(e) => setNewTaskTitle(e.target.value)}
           />
-          <button type="submit" className="btn btn-outline-success">Add task</button>
+          <button type="submit" className="btn btn-success">Add task</button>
         </div>
       </form>
 
@@ -52,7 +58,7 @@ const TodoList = () => {
                      checked={task.done}
                      onChange={() => clickOnCheck(task)}
               />
-              <button className="btn btn-outline-danger">Delete</button>
+              <button className="btn btn-outline-danger" onClick={() => onDeleteTask(task.id)}>Delete</button>
             </div>
           </li>
         ))}
