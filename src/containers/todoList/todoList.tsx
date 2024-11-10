@@ -1,9 +1,14 @@
 
 
 const TodoList = () => {
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="container">
-      <form className="mb-2">
+      <form className="mb-2" onSubmit={onSubmit}>
         <div className="input-group">
           <input
             type="text"
