@@ -1,6 +1,16 @@
+import {useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../app/store.ts';
+import { useEffect } from 'react';
+import { fetchList } from './todoListSlice.ts';
 
 
 const TodoList = () => {
+  const tasks = useSelector((state: RootState) => state.todoList.tasks);
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchList());
+  },[dispatch]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,18 +31,18 @@ const TodoList = () => {
 
 
       <ul className="list-group">
-        <li className="list-group-item d-flex justify-content-between align-items-center">
-          Task
-          <div>
-            <input type="checkbox"
-                   className="me-2"
-            />
-            <button className="btn btn-outline-danger">Delete</button>
-          </div>
-
-        </li>
+        {tasks.map((task) => (
+          <li key={task.id} className="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <input type="checkbox"
+                     className="me-2"
+              />
+              {task.title}
+              <button className="btn btn-outline-danger">Delete</button>
+            </div>
+          </li>
+        ))}
       </ul>
-
     </div>
   );
 };
