@@ -1,10 +1,10 @@
-import { taskState } from '../../types';
+import { task, taskState, taskStateApi } from '../../types';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosApi from '../../axiosApi.ts';
 
 
 interface todoListState {
-  tasks: taskState[];
+  tasks: task[];
   isLoading: boolean;
   error: boolean;
 }
@@ -16,9 +16,14 @@ const initialState: todoListState = {
 };
 
 export const fetchList = createAsyncThunk('tasks/fetchList', async() => {
-  const {data: todoList} = await axiosApi<taskState[]>('tasks.json');
-  console.log(todoList);
-  return todoList;
+  const {data} = await axiosApi<taskStateApi>('tasks.json');
+  return Object.keys(data).map(id => ({id, ...data[id]}));
+});
+
+export const addNewTask = createAsyncThunk('tasks/addNewTask', async (title: string) => {
+  const newTask: taskState = {title, done: false};
+  const {data} = await axiosApi.post<{name: string}>('tasks.json', newTask);
+  return {id: data.name, ...newTask};
 });
 
 export const todoListSlice = createSlice({
