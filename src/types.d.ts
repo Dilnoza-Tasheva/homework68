@@ -3,7 +3,7 @@ export interface taskState {
   done: boolean
 }
 
-export interface task {
+export interface ITask {
   id: string;
   title: string;
   done: boolean;

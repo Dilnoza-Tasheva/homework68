@@ -1,7 +1,8 @@
 import {useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../app/store.ts';
 import { useEffect, useState } from 'react';
-import { addNewTask, fetchList } from './todoListSlice.ts';
+import { addNewTask, checkTask, fetchList } from './todoListSlice.ts';
+import { ITask } from '../../types';
 
 
 const TodoList = () => {
@@ -19,6 +20,10 @@ const TodoList = () => {
       dispatch(addNewTask(newTaskTitle));
       setNewTaskTitle('');
     }
+  };
+
+  const clickOnCheck = (task: ITask) => {
+    dispatch(checkTask(task));
   };
 
   return (
@@ -44,6 +49,8 @@ const TodoList = () => {
             <div>
               <input type="checkbox"
                      className="me-2"
+                     checked={task.done}
+                     onChange={() => clickOnCheck(task)}
               />
               <button className="btn btn-outline-danger">Delete</button>
             </div>
